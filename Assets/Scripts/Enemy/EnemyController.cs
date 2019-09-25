@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class EnemyController : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     [Tooltip("Speed of the enemy")]
     private float m_speed;
+
 
     [SerializeField]
     [Tooltip("Approx damage dealt per frame")]
@@ -31,8 +34,17 @@ public class EnemyController : MonoBehaviour
     private GameObject m_HealthPill;
 
     [SerializeField]
+    [Tooltip("Probability that this enemy drops Flying Pill")]
+    private float m_KillPillDropRate;
+
+    [SerializeField]
+    [Tooltip("Type of Flying pill dropped")]
+    private GameObject m_KillPill;
+
+    [SerializeField]
     [Tooltip("How many points will player get for killing this enemy")]
     private int m_Score;
+
     #endregion 
 
     #region Private Variables
@@ -51,7 +63,10 @@ public class EnemyController : MonoBehaviour
 
     #region Initialization
     private void Awake()
-    {
+    { 
+        m_speed += ScoreManager.singleton.level;
+
+
         p_curHealth = m_MaxHealth;
         cc_Rb = GetComponent<Rigidbody>();
 
@@ -80,7 +95,15 @@ public class EnemyController : MonoBehaviour
         GameObject other = collision.collider.gameObject;
          if (other.CompareTag("Player"))
         {
-            other.GetComponent<PlayerController>().DecreaseHealth(m_Damage);
+            if (other.GetComponent<PlayerController>().p_KillTime > 0)
+            {
+                DecreaseHealth(50000);
+            }
+            else
+            {
+                other.GetComponent<PlayerController>().DecreaseHealth(m_Damage);
+
+            }
         }
     }
 
@@ -92,11 +115,24 @@ public class EnemyController : MonoBehaviour
         p_curHealth -= amount;
         if (p_curHealth <= 0)
         {
+
             ScoreManager.singleton.IncreaseScore(m_Score);
-            if (Random.value < m_HealthPillDropRate)
+            int x = Random.Range(0, 2);
+            if (x == 0)
             {
-                Instantiate(m_HealthPill, transform.position, Quaternion.identity);
+                if (Random.value < m_HealthPillDropRate)
+                {
+                    Instantiate(m_HealthPill, transform.position, Quaternion.identity);
+                }
             }
+            else
+            {
+                if (Random.value < m_KillPillDropRate)
+                {
+                    Instantiate(m_KillPill, transform.position, Quaternion.identity);
+                }
+            }
+
             Instantiate(m_DeathExplosion, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }

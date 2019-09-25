@@ -6,10 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
-    #region Editor Variables
+     #region Editor Variables
     [SerializeField]
     [Tooltip("Text component housing current high score")]
-    private Text m_HighScore;
+    private Text m_HighScore; 
 
     #endregion
 
@@ -21,11 +21,13 @@ public class MainMenuController : MonoBehaviour
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.None;
-        m_DefaultHighScoreText = m_HighScore.text;
+         
     }
     private void Start()
     {
+        m_DefaultHighScoreText = m_HighScore.text;
         UpdateHighScore();
+
     }
 
     #endregion
@@ -33,10 +35,10 @@ public class MainMenuController : MonoBehaviour
     #region Play Button Methods
     public void PlayArena()
     {
-        SceneManager.LoadScene("Arena");
+        SceneManager.LoadScene("Level 1");
     }
     #endregion
-
+      
     #region General Application Button Methods
     public void Quit()
     {

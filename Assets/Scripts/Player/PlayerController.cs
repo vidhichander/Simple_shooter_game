@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,6 +28,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     [Tooltip("The HUD Script")]
     private HUDController m_HUD;
+
+    [SerializeField]
+    [Tooltip("How fast the player should move when running around.")]
+    private Text m_KillCountDown;
+
     #endregion
 
     #region Cached References
@@ -49,11 +56,17 @@ public class PlayerController : MonoBehaviour
 
     //Current amount of health player has (damage taken not full numbers)
     private float p_CurHealth;
+
+    private int p_CurScore;
+
+    public float p_KillTime;
     #endregion
 
     #region Initialization
     private void Awake()
     {
+        m_KillCountDown.text = "";
+        p_KillTime = 0;
         p_Velocity = Vector2.zero;
         cc_Rb = GetComponent<Rigidbody>();
         cr_Anim = GetComponent<Animator>();
@@ -73,6 +86,7 @@ public class PlayerController : MonoBehaviour
                 Debug.LogError(attack.AttackName + " has a wind up time that is larger than amount of time player is frozen for");
             }
         }
+        p_CurScore = 0;
     }
     private void Start()
     {
@@ -84,6 +98,16 @@ public class PlayerController : MonoBehaviour
     #region Main Updates
     private void Update()
     {
+        if (p_KillTime > 0)
+        {
+            p_KillTime -= Time.deltaTime;
+            m_KillCountDown.text = "Killer Mode Activated! Time Left = " + p_KillTime;
+        }
+        else
+        {
+            m_KillCountDown.text = "";
+        }
+
         if (p_FrozenTimer > 0)
         {
             p_Velocity = Vector2.zero;
@@ -146,7 +170,7 @@ public class PlayerController : MonoBehaviour
             right = 0;
         }
         p_Velocity.Set(right, forward);
-    }
+        }
 
     //for updates using physics. Runs on a set time frame.
     private void FixedUpdate()
@@ -232,6 +256,13 @@ public class PlayerController : MonoBehaviour
         {
             IncreaseHealth(other.GetComponent<HealthPill>().HealthGain);
             Destroy(other.gameObject);
+        }
+        if (other.CompareTag("KillPill"))
+        {
+            p_KillTime = 10;
+            m_KillCountDown.text = "Killer Mode Activated! Time Left = " + p_KillTime;
+            Destroy(other.gameObject);
+
         }
     }
     #endregion

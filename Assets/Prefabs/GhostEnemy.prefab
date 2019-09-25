@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 778976871}
   - component: {fileID: 778976873}
   - component: {fileID: 778976874}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GhostEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -4827,4 +4827,9 @@ MonoBehaviour:
   m_HealthPillDropRate: 0.5
   m_HealthPill: {fileID: 6739812202491858466, guid: 1e8d8b8d3cd2943fdbe1dcfa41fb5dc7,
     type: 3}
+  m_KillPillDropRate: 0.5
+  m_KillPill: {fileID: 1869758568995912395, guid: f48735bdb34ef40948f15b423138cf96,
+    type: 3}
   m_Score: 2
+  m_levelUp: {fileID: 6420034993594293270, guid: 006dd0804be3e4724b4ce8d32327f899,
+    type: 3}
