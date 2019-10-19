@@ -44,6 +44,11 @@ public class MainMenuController : MonoBehaviour
     {
         Application.Quit(); 
     }
+
+    public void Rules()
+    {
+        SceneManager.LoadScene("Rules");
+    }
     #endregion
 
     #region HighScore Methods
